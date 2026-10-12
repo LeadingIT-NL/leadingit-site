@@ -155,7 +155,7 @@
       _subject: (prelaunch ? "Voorbestelling boek – " : "Boekbestelling – ") + n + "x – " + val("f-naam"),
       _template: "table",
       _replyto: val("f-email"),
-      boek: "Beter navigeren zonder strakker te sturen (hardcover, ISBN 9789083392288)",
+      boek: "Beter navigeren zonder strakker te sturen (hardcover, ISBN 9789083392240)",
       soort: prelaunch ? "Voorbestelling (verzending vanaf 16-11-2026)" : "Bestelling", aantal: n, prijs_per_stuk: euro(PRICE) + (promo ? " (introductieprijs)" : ""), subtotaal: euro(c.books), staffelkorting: c.pct ? c.pct + "% (− " + euro(c.disc) + ")" : "geen", verzendkosten: c.be ? euro(c.ship) + " (België)" : "inbegrepen (Nederland)", totaal: euro(c.total),
       naam: val("f-naam"), email: val("f-email"), mobiel: val("f-tel"), organisatie: val("f-org"),
       adres: val("f-adres"), postcode: val("f-postcode"), plaats: val("f-plaats"), land: c.be ? "België" : "Nederland", opmerking: val("f-opm")
