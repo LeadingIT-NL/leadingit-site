@@ -7,7 +7,8 @@
   var today = new Date();
   var promo = today < PROMO_END, prelaunch = today < RELEASE;
   var PRICE = promo ? PROMO : REGULAR;
-  var SHIP_BE = 5.00;         // verzendtoeslag België per bestelling
+  var SHIP = { NL: 0, BE: 5.00, LU: 5.00 };   // verzendkosten per bestelling; buiten de Benelux in overleg
+  var COUNTRY = { NL: "Nederland", BE: "België", LU: "Luxemburg" };
   var MAX_QTY = 99;           // 100+ via offerte
   // Staffelkorting binnen de Wet op de vaste boekenprijs: 10–29 st. max 5%, 30–99 st. max 10%
   var TIERS = [ { min: 30, pct: 10 }, { min: 10, pct: 5 } ];
@@ -33,10 +34,10 @@
     el.textContent = prelaunch ? "Verschijnt 16 november 2026 · Nu voorbestellen" : (promo ? "Nieuw boek · Introductieprijs t/m 15 februari 2027" : "Nieuw boek");
   });
   each("[data-price-box]", function(el){
-    el.setAttribute("aria-label", "Prijs: " + euro(PRICE).replace("€", "") + " euro" + (promo ? ", introductieprijs tot en met 15 februari 2027, daarna 34,95 euro" : "") + ", inclusief verzendkosten binnen Nederland; naar België 5 euro verzendkosten per bestelling");
+    el.setAttribute("aria-label", "Prijs: " + euro(PRICE).replace("€", "") + " euro" + (promo ? ", introductieprijs tot en met 15 februari 2027, daarna 34,95 euro" : "") + ", inclusief verzendkosten binnen Nederland; naar België en Luxemburg 5 euro verzendkosten per bestelling");
   });
 
-  // Everything below is for the order form (only on /boek/)
+  // Everything below is for the order form (only on /nl/boek/)
   if (!document.getElementById("order-form")) return;
 
   // Quantity + total
@@ -47,8 +48,9 @@
   function calc(){
     var n = clampQty(), pct = 0;
     for (var i = 0; i < TIERS.length; i++) if (n >= TIERS[i].min) { pct = TIERS[i].pct; break; }
-    var books = round2(n * PRICE), disc = round2(books * pct / 100), ship = land.value === "BE" ? SHIP_BE : 0;
-    return { n: n, pct: pct, books: books, disc: disc, ship: ship, total: round2(books - disc + ship), be: land.value === "BE" };
+    var cc = SHIP.hasOwnProperty(land.value) ? land.value : "NL";
+    var books = round2(n * PRICE), disc = round2(books * pct / 100), ship = SHIP[cc];
+    return { n: n, pct: pct, books: books, disc: disc, ship: ship, total: round2(books - disc + ship), cc: cc, country: COUNTRY[cc], abroad: cc !== "NL" };
   }
   function update(){
     var c = calc();
@@ -57,8 +59,8 @@
     $("c-disc-row").hidden = c.pct === 0;
     $("c-disc-label").textContent = "Staffelkorting " + c.pct + "%";
     $("c-disc").textContent = "− " + euro(c.disc);
-    $("c-ship-label").textContent = c.be ? "Verzendkosten België" : "Verzendkosten Nederland";
-    $("c-ship").textContent = c.be ? euro(c.ship) : "inbegrepen";
+    $("c-ship-label").textContent = "Verzendkosten " + c.country;
+    $("c-ship").textContent = c.abroad ? euro(c.ship) : "inbegrepen";
     total.textContent = euro(c.total);
     var hint = $("qty-hint");
     if (c.n >= 6 && c.n < 10) hint.innerHTML = "Nog <b>" + (10 - c.n) + "</b> " + (10 - c.n === 1 ? "boek" : "boeken") + " tot 5% staffelkorting.";
@@ -73,7 +75,7 @@
   update();
   qty.addEventListener("blur", function(){ qty.value = clampQty(); update(); });
 
-  // Mobile number check: international format (+31 6 …, +32 4 …) and a mobile number, no landlines.
+  // Mobile number check: international format (+31 6 …, +32 4 …, +352 6 …) and a mobile number, no landlines.
   // Uses libphonenumber (number type per country); without it, falls back to a strict Dutch check.
   var tel = document.getElementById("f-tel");
   function isMobile(raw){
@@ -104,17 +106,17 @@
   function orderText(){
     var c = calc();
     return [
-      "Bestelling: Beter navigeren zonder strakker te sturen (hardcover)" + (prelaunch ? " – VOORBESTELLING, verzending vanaf 16-11-2026" : ""),
+      "Bestelling: Beter navigeren zonder strakker te sturen (luxe hardcover)" + (prelaunch ? " – VOORBESTELLING, verzending vanaf 16-11-2026" : ""),
       "Aantal: " + c.n + " × " + euro(PRICE) + " = " + euro(c.books),
       c.pct ? "Staffelkorting " + c.pct + "%: − " + euro(c.disc) : "Staffelkorting: geen",
-      "Verzendkosten: " + (c.be ? euro(c.ship) + " (België)" : "inbegrepen (Nederland)"),
+      "Verzendkosten: " + (c.abroad ? euro(c.ship) + " (" + c.country + ")" : "inbegrepen (Nederland)"),
       "Totaal: " + euro(c.total),
       "",
       "Naam: " + val("f-naam"),
       "E-mail: " + val("f-email"),
       "Mobiel: " + val("f-tel"),
       "Organisatie: " + (val("f-org") || "-"),
-      "Adres: " + val("f-adres") + ", " + val("f-postcode") + " " + val("f-plaats") + ", " + (calc().be ? "België" : "Nederland"),
+      "Adres: " + val("f-adres") + ", " + val("f-postcode") + " " + val("f-plaats") + ", " + calc().country,
       "Opmerking: " + (val("f-opm") || "-")
     ].join("\n");
   }
@@ -155,10 +157,10 @@
       _subject: (prelaunch ? "Voorbestelling boek – " : "Boekbestelling – ") + n + "x – " + val("f-naam"),
       _template: "table",
       _replyto: val("f-email"),
-      boek: "Beter navigeren zonder strakker te sturen (hardcover, ISBN 9789083392240)",
-      soort: prelaunch ? "Voorbestelling (verzending vanaf 16-11-2026)" : "Bestelling", aantal: n, prijs_per_stuk: euro(PRICE) + (promo ? " (introductieprijs)" : ""), subtotaal: euro(c.books), staffelkorting: c.pct ? c.pct + "% (− " + euro(c.disc) + ")" : "geen", verzendkosten: c.be ? euro(c.ship) + " (België)" : "inbegrepen (Nederland)", totaal: euro(c.total),
+      boek: "Beter navigeren zonder strakker te sturen (luxe hardcover, ISBN 9789083392240)",
+      soort: prelaunch ? "Voorbestelling (verzending vanaf 16-11-2026)" : "Bestelling", aantal: n, prijs_per_stuk: euro(PRICE) + (promo ? " (introductieprijs)" : ""), subtotaal: euro(c.books), staffelkorting: c.pct ? c.pct + "% (− " + euro(c.disc) + ")" : "geen", verzendkosten: c.abroad ? euro(c.ship) + " (" + c.country + ")" : "inbegrepen (Nederland)", totaal: euro(c.total),
       naam: val("f-naam"), email: val("f-email"), mobiel: val("f-tel"), organisatie: val("f-org"),
-      adres: val("f-adres"), postcode: val("f-postcode"), plaats: val("f-plaats"), land: c.be ? "België" : "Nederland", opmerking: val("f-opm")
+      adres: val("f-adres"), postcode: val("f-postcode"), plaats: val("f-plaats"), land: c.country, opmerking: val("f-opm")
     };
     btn.disabled = true; btn.textContent = "Bezig met versturen…";
     fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload) })

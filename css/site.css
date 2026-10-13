@@ -87,7 +87,7 @@ section{padding-block:clamp(64px,9vw,112px)}
 .cover-stage:hover .cover{transform:rotateY(-4deg)}
 .cover-stage::after{content:"";position:absolute;left:8%;right:2%;bottom:-26px;height:26px;background:radial-gradient(closest-side,rgba(0,0,0,.45),transparent);filter:blur(4px)}
 .isbn{font-family:var(--f-mono);font-size:var(--s-xs);color:var(--on-navy-muted);margin-top:2.4rem;text-align:center;letter-spacing:.06em}
-@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.cover-stage{max-width:280px;order:-1}}
+@media (max-width:860px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.cover-stage{max-width:280px;order:-1}}
 
 /* Book + order */
 .book .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:clamp(32px,6vw,72px);align-items:start}
@@ -273,3 +273,13 @@ select:focus{outline:none;border-color:var(--navy);background:var(--white);box-s
 .calc-total output{font-family:var(--f-display);font-weight:800;font-size:1.6rem;color:var(--navy)}
 
 [hidden]{display:none!important}
+
+/* Taalwissel en link naar de andere editie */
+.nav a.lang-link{font-family:var(--f-mono);font-size:var(--s-xs);letter-spacing:.08em;font-weight:500;color:var(--navy);border:1px solid var(--line);border-radius:3px;padding:.3rem .55rem;line-height:1}
+.nav a.lang-link:hover{border-color:var(--navy);text-decoration:none}
+@media (max-width:900px){.nav a.lang-link{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:.8rem 0;font-size:var(--s-md);letter-spacing:.04em}}
+.edition-link{flex-basis:100%;display:inline-flex;align-items:center;gap:.45rem;max-width:100%;font-size:var(--s-sm);color:var(--on-navy-muted);text-decoration:none;border-bottom:1px solid rgba(233,236,246,.25);padding-bottom:.15rem}
+.edition-link i{font-style:normal;color:var(--on-navy);font-weight:600}
+.edition-link:hover{color:var(--on-navy);border-bottom-color:var(--gold)}
+.edition-link svg{flex:none;color:var(--gold)}
+@media (max-width:520px){.badge{display:inline-block;max-width:100%;line-height:1.6}}
