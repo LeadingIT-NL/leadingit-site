@@ -283,3 +283,11 @@ select:focus{outline:none;border-color:var(--navy);background:var(--white);box-s
 .edition-link:hover{color:var(--on-navy);border-bottom-color:var(--gold)}
 .edition-link svg{flex:none;color:var(--gold)}
 @media (max-width:520px){.badge{display:inline-block;max-width:100%;line-height:1.6}}
+
+/* Vooraankondiging: planning in de hero en aanmeldformulier */
+.milestones{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.75rem 2.25rem;flex-basis:100%}
+.milestones li{display:flex;flex-direction:column;gap:.2rem;padding-left:.9rem;border-left:3px solid var(--orange);color:var(--white);font-family:var(--f-display);font-stretch:106%;font-weight:700;font-size:var(--s-lg);line-height:1.2}
+.milestones li span{font-family:var(--f-mono);font-size:var(--s-xs);font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.launch-intro{margin-top:1rem;color:var(--ink);max-width:56ch}
+.choices{border:0;margin:0;padding:0;display:grid;gap:.6rem}
+.choices legend{font-weight:600;color:var(--navy);margin-bottom:.6rem;padding:0}
