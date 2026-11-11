@@ -112,6 +112,7 @@
   tel.addEventListener("input", checkTel);
 
   function val(id){ return $(id).value.trim(); }
+  function btwNr(){ return val("f-btw").replace(/[\s.\-]/g, "").toUpperCase(); }
   function eventText(){ return prelaunch ? (ev.checked ? "interesse, " + val("f-persons") + " pers." : "nee") : "-"; }
   function deliveryText(){
     var d = shipping() ? "verzenden naar " + val("f-adres") + ", " + val("f-postcode") + " " + val("f-plaats") + ", " + calc().country : "persoonlijk overhandigen (in overleg)";
@@ -132,6 +133,7 @@
       "E-mail: " + val("f-email"),
       "Mobiel: " + val("f-tel"),
       "Organisatie: " + (val("f-org") || "-"),
+      "Btw-nummer: " + (btwNr() || "-"),
       "Opmerking: " + (val("f-opm") || "-")
     ].join("\n");
   }
@@ -173,7 +175,7 @@
       _subject: (prelaunch ? "Voorbestelling boek – " : "Boekbestelling – ") + n + "x – " + (prelaunch && ev.checked ? "INTERESSE PRESENTATIE – " : "") + val("f-naam"),
       _template: "table",
       _replyto: val("f-email"),
-      _autoresponse: "Bedankt voor je " + (prelaunch ? "voorbestelling" : "bestelling") + " van Beter navigeren zonder strakker te sturen (" + n + "x, totaal " + euro(c.total) + "). Je ontvangt binnenkort een betaalverzoek op je mobiele nummer." + (prelaunch ? " Het boek verschijnt op 10 februari 2027." + (ev.checked ? " In januari laten we je weten of er een plek voor je is bij de boekpresentatie in Rotterdam." : "") : "") + " Vragen? Mail naar info@leadingit.nl. Met vriendelijke groet, Raymond Koppe",
+      _autoresponse: "Bedankt voor je " + (prelaunch ? "voorbestelling" : "bestelling") + " van Beter navigeren zonder strakker te sturen (" + n + "x, totaal " + euro(c.total) + "). Je ontvangt binnenkort een betaalverzoek op je mobiele nummer en een factuur per e-mail." + (prelaunch ? " Het boek verschijnt op 10 februari 2027." + (ev.checked ? " In januari laten we je weten of er een plek voor je is bij de boekpresentatie in Rotterdam." : "") : "") + " Vragen? Mail naar info@leadingit.nl. Met vriendelijke groet, Raymond Koppe",
       boek: "Beter navigeren zonder strakker te sturen (luxe hardcover, ISBN 9789083392240)",
       soort: prelaunch ? "Voorbestelling" : "Bestelling",
       aantal: n, prijs_per_stuk: euro(PRICE) + (promo ? " (introductieprijs)" : ""), subtotaal: euro(c.books),
@@ -182,14 +184,14 @@
       totaal: euro(c.total),
       boekpresentatie: eventText(),
       levering: deliveryText(),
-      naam: val("f-naam"), email: val("f-email"), mobiel: val("f-tel"), organisatie: val("f-org"), opmerking: val("f-opm")
+      naam: val("f-naam"), email: val("f-email"), mobiel: val("f-tel"), organisatie: val("f-org"), btw_nummer: btwNr(), opmerking: val("f-opm")
     };
     btn.disabled = true; btn.textContent = "Bezig met versturen…";
     fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload) })
       .then(function(r){ return r.json().then(function(j){ if (!r.ok || String(j.success) !== "true") throw new Error(j.message || "fout"); }); })
       .then(function(){
         msg.className = "form-msg ok"; msg.hidden = false;
-        msg.textContent = "Bedankt, " + val("f-naam") + "! Je " + (prelaunch ? "voorbestelling" : "bestelling") + " van " + n + " " + (n === 1 ? "boek" : "boeken") + " (" + euro(c.total) + ") is ontvangen. Je krijgt een betaalverzoek op " + val("f-tel") + "." +
+        msg.textContent = "Bedankt, " + val("f-naam") + "! Je " + (prelaunch ? "voorbestelling" : "bestelling") + " van " + n + " " + (n === 1 ? "boek" : "boeken") + " (" + euro(c.total) + ") is ontvangen. Je krijgt een betaalverzoek op " + val("f-tel") + " en een factuur per e-mail." +
           (prelaunch && ev.checked ? " In januari laten we je weten of er een plek voor je is bij de boekpresentatie." : "");
         form.reset(); update();
       })

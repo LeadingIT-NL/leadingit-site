@@ -175,7 +175,8 @@
           <li data-postlaunch hidden><span><strong>Nu verkrijgbaar.</strong> We versturen je bestelling binnen enkele werkdagen</span></li>
           <li><span>Verzendkosten binnen Nederland inbegrepen, naar België en Luxemburg €5,00 per bestelling</span></li>
           <li><span>Staffelkorting: 5% vanaf 10 boeken, 10% vanaf 30 boeken</span></li>
-          <li><span>Je ontvangt een betaalverzoek op je mobiele nummer</span></li>
+          <li><span>Zakelijke bestelling? Vul je organisatie en btw-nummer in, dan komen die op de factuur</span></li>
+          <li><span>Je ontvangt een betaalverzoek op je mobiele nummer en een factuur per e-mail</span></li>
           <li><span>Op verzoek gesigneerd, vermeld het bij je opmerking</span></li>
           <li><span>Buiten de Benelux of 100 exemplaren of meer? <a href="#contact">Neem contact op</a></span></li>
         </ul>
@@ -201,8 +202,9 @@
           </div>
           <div class="row">
             <div class="field"><label for="f-tel">Mobiel nummer <span class="opt">(voor betaalverzoek)</span></label><input id="f-tel" name="mobiel" type="tel" autocomplete="tel" inputmode="tel" placeholder="+31 6 12345678" required></div>
-            <div class="field"><label for="f-org">Organisatie <span class="opt">(voor factuur)</span></label><input id="f-org" name="organisatie" autocomplete="organization"></div>
+            <div class="field"><label for="f-org">Organisatie <span class="opt">(optioneel)</span></label><input id="f-org" name="organisatie" autocomplete="organization"></div>
           </div>
+          <div class="field"><label for="f-btw">Btw-nummer <span class="opt">(optioneel, voor zakelijke bestellingen)</span></label><input id="f-btw" name="btwnummer" autocapitalize="characters" spellcheck="false" placeholder="bijv. NL123456789B01"></div>
           <fieldset class="choices" data-prelaunch>
             <legend>Boekpresentatie 10 februari 2027</legend>
             <label class="consent"><input type="checkbox" id="f-event" name="presentatie"> Ik heb interesse om bij de boekpresentatie te zijn. Jullie kijken of er ruimte is en laten het me in januari weten.</label>
@@ -242,7 +244,7 @@
           </div>
           <label class="consent"><input type="checkbox" id="f-akkoord" name="akkoord" required> Ik bestel met betalingsverplichting en ontvang een betaalverzoek op mijn mobiele nummer.</label>
           <button type="submit" class="btn btn-gold" id="submit-btn" style="justify-content:center">Voorbestelling plaatsen</button>
-          <p class="fine"><span data-prelaunch>Het boek verschijnt op 10 februari 2027. </span>Je bestelling gaat naar info@leadingit.nl. Je ontvangt een bevestiging per e-mail en een betaalverzoek op je mobiele nummer. Je gegevens worden alleen gebruikt om je bestelling en je eventuele aanmelding voor de boekpresentatie af te handelen; lees de <a href="#privacy">privacyverklaring</a>.</p>
+          <p class="fine"><span data-prelaunch>Het boek verschijnt op 10 februari 2027. </span>Je bestelling gaat naar info@leadingit.nl. Je ontvangt een bevestiging en een factuur per e-mail en een betaalverzoek op je mobiele nummer. Alle prijzen zijn inclusief 9% btw. Je gegevens worden alleen gebruikt om je bestelling en je eventuele aanmelding voor de boekpresentatie af te handelen; lees de <a href="#privacy">privacyverklaring</a>.</p>
           <div id="form-msg" class="form-msg" role="status" aria-live="polite" hidden></div>
         </form>
       </div>
@@ -301,7 +303,7 @@
           <ul>
             <li>Naam, e-mailadres en mobiel nummer</li>
             <li>Afleveradres, als je het boek laat verzenden</li>
-            <li>Organisatie, als je die invult</li>
+            <li>Organisatie en btw-nummer, als je die invult</li>
             <li>Je bestelling, of je bij de boekpresentatie wilt zijn (met hoeveel personen) en je opmerking</li>
           </ul>
         </section>
