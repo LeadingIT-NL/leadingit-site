@@ -112,10 +112,10 @@
   tel.addEventListener("input", checkTel);
 
   function val(id){ return $(id).value.trim(); }
-  function eventText(){ return prelaunch ? (ev.checked ? "ja, " + val("f-persons") + " pers." : "nee") : "-"; }
+  function eventText(){ return prelaunch ? (ev.checked ? "interesse, " + val("f-persons") + " pers." : "nee") : "-"; }
   function deliveryText(){
     var d = shipping() ? "verzenden naar " + val("f-adres") + ", " + val("f-postcode") + " " + val("f-plaats") + ", " + calc().country : "persoonlijk overhandigen (in overleg)";
-    return prelaunch ? (ev.checked ? "uitreiking op de presentatie; anders " + d : d + " (direct na 10-02-2027)") : d;
+    return prelaunch ? (ev.checked ? "bij plek op de presentatie: uitreiking die avond; anders " + d : d + " (direct na 10-02-2027)") : d;
   }
   function orderText(){
     var c = calc();
@@ -170,7 +170,7 @@
     if (form._honey.value) return; // spam
     var c = calc(), n = c.n, text = orderText();
     var payload = {
-      _subject: (prelaunch ? "Voorbestelling boek – " : "Boekbestelling – ") + n + "x – " + (prelaunch && ev.checked ? "WIL NAAR PRESENTATIE – " : "") + val("f-naam"),
+      _subject: (prelaunch ? "Voorbestelling boek – " : "Boekbestelling – ") + n + "x – " + (prelaunch && ev.checked ? "INTERESSE PRESENTATIE – " : "") + val("f-naam"),
       _template: "table",
       _replyto: val("f-email"),
       _autoresponse: "Bedankt voor je " + (prelaunch ? "voorbestelling" : "bestelling") + " van Beter navigeren zonder strakker te sturen (" + n + "x, totaal " + euro(c.total) + "). Je ontvangt binnenkort een betaalverzoek op je mobiele nummer." + (prelaunch ? " Het boek verschijnt op 10 februari 2027." + (ev.checked ? " In januari laten we je weten of er een plek voor je is bij de boekpresentatie in Rotterdam." : "") : "") + " Vragen? Mail naar info@leadingit.nl. Met vriendelijke groet, Raymond Koppe",
