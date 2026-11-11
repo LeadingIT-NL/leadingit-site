@@ -42,10 +42,11 @@
 
   var form = $("order-form");
   if (!form) return;
-  if (!open) { form.hidden = true; $("presale-wait").hidden = false; return; }
+  // Voor de start van de voorverkoop: formulier zichtbaar, versturen nog niet mogelijk
+  if (!open) $("presale-wait").hidden = false;
 
   var qty = $("f-aantal"), land = $("f-land"), lev = $("f-levering"), ev = $("f-event");
-  var BTN_TEXT = prelaunch ? "Voorbestelling plaatsen" : "Bestelling plaatsen";
+  var BTN_TEXT = !open ? "Bestellen kan vanaf 15 november" : (prelaunch ? "Voorbestelling plaatsen" : "Bestelling plaatsen");
   var btn = $("submit-btn"), msg = $("form-msg");
   btn.textContent = BTN_TEXT;
   if (!prelaunch) {
@@ -159,6 +160,11 @@
   form.addEventListener("submit", function(e){
     e.preventDefault();
     msg.hidden = true;
+    if (!open) {
+      msg.className = "form-msg err"; msg.hidden = false;
+      msg.innerHTML = "De voorverkoop start op <strong>15 november 2026</strong>. Vanaf die dag kun je dit formulier versturen. Wil je nu al een exemplaar reserveren? Mail naar <a href=\"mailto:info@leadingit.nl?subject=Reservering%20boek\">info@leadingit.nl</a>.";
+      return;
+    }
     checkTel(); update();
     if (!form.checkValidity()) {
       var first = form.querySelector(":invalid");
