@@ -193,15 +193,35 @@
       naam: val("f-naam"), email: val("f-email"), mobiel: val("f-tel"), organisatie: val("f-org"), btw_nummer: btwNr(), opmerking: val("f-opm")
     };
     btn.disabled = true; btn.textContent = "Bezig met versturen…";
+    // FormSubmit kan traag zijn: niet afbreken, wel de bezoeker geruststellen
+    var done = false, form_name = val("f-naam");
+    var slow = setTimeout(function(){
+      if (done) return;
+      msg.className = "form-msg"; msg.hidden = false;
+      msg.textContent = "Je bestelling wordt verstuurd. Dat duurt soms even; laat deze pagina open en verstuur het formulier niet opnieuw.";
+    }, 10000);
+    var veryslow = setTimeout(function(){
+      if (done) return;
+      msg.className = "form-msg"; msg.hidden = false;
+      msg.innerHTML = "";
+      var p = document.createElement("p");
+      p.textContent = "Het versturen duurt langer dan normaal. Je bestelling komt waarschijnlijk alsnog aan; verstuur het formulier niet opnieuw. Heb je binnen een uur geen bevestigingsmail ontvangen, mail dan naar info@leadingit.nl.";
+      msg.appendChild(p);
+    }, 90000);
+    function finish(){ done = true; clearTimeout(slow); clearTimeout(veryslow); btn.disabled = false; btn.textContent = BTN_TEXT; }
     fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload) })
-      .then(function(r){ return r.json().then(function(j){ if (!r.ok || String(j.success) !== "true") throw new Error(j.message || "fout"); }); })
+      .then(function(r){ return r.json().then(function(j){ if (!r.ok || String(j.success) !== "true") throw new Error(j.message || ("HTTP " + r.status)); }); })
       .then(function(){
+        finish();
         msg.className = "form-msg ok"; msg.hidden = false;
-        msg.textContent = "Bedankt, " + val("f-naam") + "! Je " + (prelaunch ? "voorbestelling" : "bestelling") + " van " + n + " " + (n === 1 ? "boek" : "boeken") + " (" + euro(c.total) + ") is ontvangen. Je krijgt een betaalverzoek op " + val("f-tel") + " en een factuur per e-mail." +
+        msg.textContent = "Bedankt, " + form_name + "! Je " + (prelaunch ? "voorbestelling" : "bestelling") + " van " + n + " " + (n === 1 ? "boek" : "boeken") + " (" + euro(c.total) + ") is ontvangen. Je krijgt een betaalverzoek op je mobiele nummer en een factuur per e-mail." +
           (prelaunch && ev.checked ? " In januari laten we je weten of er een plek voor je is bij de boekpresentatie." : "");
         form.reset(); update();
       })
-      .catch(function(){ showError(text); })
-      .finally(function(){ btn.disabled = false; btn.textContent = BTN_TEXT; });
+      .catch(function(err){
+        finish();
+        if (window.console) console.warn("Bestelformulier niet verstuurd:", err && err.message);
+        showError(text);
+      });
   });
 })();
