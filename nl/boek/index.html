@@ -6,8 +6,8 @@
 <title>Beter navigeren zonder strakker te sturen – Raymond Koppe</title>
 <meta name="description" content="Beter navigeren zonder strakker te sturen, een praktijkgids van Raymond Koppe over complex programmamanagement. Bestel nu voor tegen de introductieprijs van €29,95; boekpresentatie op 10 februari 2027 in Rotterdam.">
 <meta name="theme-color" content="#0B1A5C">
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="icon" type="image/png" href="/favicon.png?v=2">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <meta property="og:title" content="Beter navigeren zonder strakker te sturen">
 <meta property="og:description" content="Bestel nu voor tegen de introductieprijs van €29,95 (normaal €34,95). Boekpresentatie op 10 februari 2027 in Rotterdam.">
 <meta property="og:image" content="https://www.leadingit.nl/images/boek-omslag.jpg">
@@ -38,6 +38,37 @@
 .privacy ul{margin:.25rem 0 0;padding-left:1.1rem;display:grid;gap:.2rem}
 .privacy a{color:var(--navy);font-weight:600}
 .privacy .updated{margin-top:1.75rem;font-family:var(--f-mono);font-size:var(--s-xs);color:var(--muted)}
+/* Reviews */
+.reviews{background:var(--paper);border-top:1px solid var(--line);padding-block:clamp(48px,6vw,80px)}
+.reviews h2{font-size:var(--s-xl);color:var(--navy);margin-top:.8rem}
+.rv-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem 2rem}
+.rv-avg{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.rv-avg-num{font-family:var(--f-display);font-weight:800;font-size:2.2rem;color:var(--navy);line-height:1}
+.rv-count{color:var(--muted);font-size:var(--s-sm)}
+.rv-stars span{font-size:1.05rem;letter-spacing:.05em}
+.rv-stars.big span{font-size:1.5rem}
+.rv-stars .on{color:var(--orange)}
+.rv-stars .off{color:var(--line)}
+.rv-list,.rv-more{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;margin-top:1.75rem}
+@media (max-width:900px){.rv-list,.rv-more{grid-template-columns:minmax(0,1fr)}}
+.rv-card{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:1.25rem 1.35rem;display:flex;flex-direction:column;gap:.7rem}
+.rv-card blockquote{margin:0;font-size:var(--s-md);color:var(--ink);line-height:1.55;flex:1}
+.rv-who{font-weight:600;color:var(--navy);font-size:var(--s-sm);display:flex;flex-direction:column}
+.rv-role,.rv-date{font-weight:400;color:var(--muted);font-size:var(--s-xs)}
+.rv-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem}
+.btn-line{background:transparent;border-color:var(--navy);color:var(--navy)}
+.btn-line:hover{background:var(--navy);color:var(--white)}
+.rv-note{margin-top:1rem;font-size:var(--s-xs);color:var(--muted);max-width:70ch}
+.rv-form{margin-top:1.5rem;max-width:640px;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:clamp(20px,3vw,28px);display:grid;gap:1rem}
+.rv-form .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media (max-width:600px){.rv-form .row{grid-template-columns:minmax(0,1fr)}}
+.star-input{display:inline-flex;flex-direction:row-reverse;gap:.15rem;border:0;padding:0;margin:0}
+.star-input input{position:absolute;opacity:0;width:1px;height:1px}
+.star-input label{font-size:2rem;line-height:1;color:var(--line);cursor:pointer;font-weight:400}
+.star-input input:checked~label,.star-input label:hover,.star-input label:hover~label{color:var(--orange)}
+.star-input input:focus-visible+label{outline:2px solid var(--navy);outline-offset:2px;border-radius:4px}
+.rv-rating{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+#rv-rating-text{color:var(--muted);font-size:var(--s-sm)}
 </style>
 </head>
 <body>
@@ -152,6 +183,49 @@
         <li><span>Veel belangstelling, dus beperkt aantal plaatsen</span></li>
         <li><span>Interesse? Geef het aan in het bestelformulier hieronder</span></li>
       </ul>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="reviews" id="reviews" aria-labelledby="reviews-title" hidden>
+    <div class="wrap">
+      <div class="rv-head">
+        <div>
+          <p class="eyebrow">Reviews</p>
+          <h2 id="reviews-title">Wat lezers zeggen</h2>
+        </div>
+        <div class="rv-avg" id="rv-avg" role="img" hidden></div>
+      </div>
+      <p class="rv-note" id="rv-empty" hidden>Nog geen reviews. Heb je het boek gelezen? Jouw review helpt andere lezers op weg.</p>
+      <div class="rv-list" id="rv-list"></div>
+      <div class="rv-more" id="rv-more" hidden></div>
+      <div class="rv-actions">
+        <button type="button" class="btn btn-line" id="rv-more-btn" aria-expanded="false" aria-controls="rv-more" hidden></button>
+        <span id="review-cta" hidden><button type="button" class="btn btn-gold" id="review-open">Schrijf een review</button></span>
+      </div>
+      <form class="rv-form" id="review-form" novalidate hidden>
+        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="rv-rating">
+          <fieldset class="star-input" aria-label="Aantal sterren">
+            <input type="radio" id="rv-s5" name="sterren" value="5"><label for="rv-s5" title="5 sterren">★</label>
+            <input type="radio" id="rv-s4" name="sterren" value="4"><label for="rv-s4" title="4 sterren">★</label>
+            <input type="radio" id="rv-s3" name="sterren" value="3"><label for="rv-s3" title="3 sterren">★</label>
+            <input type="radio" id="rv-s2" name="sterren" value="2"><label for="rv-s2" title="2 sterren">★</label>
+            <input type="radio" id="rv-s1" name="sterren" value="1"><label for="rv-s1" title="1 ster">★</label>
+          </fieldset>
+          <span id="rv-rating-text" aria-live="polite"></span>
+        </div>
+        <div class="row">
+          <div class="field"><label for="rv-naam">Naam</label><input id="rv-naam" name="naam" autocomplete="name" required></div>
+          <div class="field"><label for="rv-functie">Functie of organisatie <span class="opt">(optioneel)</span></label><input id="rv-functie" name="functie" placeholder="bijv. Programmamanager, Rotterdam"></div>
+        </div>
+        <div class="field"><label for="rv-email">E-mailadres <span class="opt">(wordt niet getoond)</span></label><input id="rv-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="rv-tekst">Je review</label><textarea id="rv-tekst" name="tekst" maxlength="1200" required placeholder="Wat heb je aan het boek gehad?"></textarea></div>
+        <label class="consent"><input type="checkbox" name="toestemming" required> Mijn naam, functie en review mogen op deze pagina worden gepubliceerd.</label>
+        <button type="submit" class="btn btn-gold" id="rv-submit" style="justify-content:center">Review versturen</button>
+        <div id="rv-msg" class="form-msg" role="status" aria-live="polite" hidden></div>
+      </form>
+      <p class="rv-note">Reviews plaatsen we na controle dat de schrijver het boek heeft besteld of ontvangen. Het gemiddelde is gebaseerd op alle geplaatste reviews.</p>
     </div>
   </section>
 
@@ -304,6 +378,7 @@
             <li>Naam, e-mailadres en mobiel nummer</li>
             <li>Afleveradres, als je het boek laat verzenden</li>
             <li>Organisatie en btw-nummer, als je die invult</li>
+            <li>Bij een review: naam, functie, e-mailadres, aantal sterren en je tekst</li>
             <li>Je bestelling, of je bij de boekpresentatie wilt zijn (met hoeveel personen) en je opmerking</li>
           </ul>
         </section>
@@ -313,6 +388,7 @@
             <li>Je bestelling afhandelen: betaalverzoek, factuur en levering</li>
             <li>Je laten weten of er een plek voor je is bij de boekpresentatie</li>
             <li>Contact met je opnemen over je bestelling</li>
+            <li>Je review publiceren, met je toestemming (je e-mailadres tonen we nooit)</li>
           </ul>
           <p style="margin-top:.5rem">De grondslag is de uitvoering van je bestelling. We gebruiken je gegevens niet voor nieuwsbrieven of reclame en verkopen ze niet door.</p>
         </section>
@@ -327,7 +403,7 @@
         </section>
         <section>
           <h3>Bewaren en je rechten</h3>
-          <p>We bewaren je bestelgegevens zolang de wet dat vereist voor de administratie (7 jaar). Gegevens over de boekpresentatie verwijderen we na afloop.</p>
+          <p>We bewaren je bestelgegevens zolang de wet dat vereist voor de administratie (7 jaar). Gegevens over de boekpresentatie verwijderen we na afloop. Een review blijft staan tot je vraagt hem te verwijderen.</p>
           <p style="margin-top:.5rem">Je kunt je gegevens inzien, laten corrigeren of laten verwijderen via <a href="mailto:info@leadingit.nl?subject=Privacyverzoek">info@leadingit.nl</a>. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de <a href="https://autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a>.</p>
         </section>
       </div>
@@ -350,5 +426,6 @@
 <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.13.12/bundle/libphonenumber-max.js"></script>
 <script src="../../js/site.js"></script>
 <script src="../../js/book-nl.js"></script>
+<script src="../../js/reviews-nl.js"></script>
 </body>
 </html>
