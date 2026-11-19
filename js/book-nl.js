@@ -181,7 +181,7 @@
       _subject: (prelaunch ? "Voorbestelling boek – " : "Boekbestelling – ") + n + "x – " + (prelaunch && ev.checked ? "INTERESSE PRESENTATIE – " : "") + val("f-naam"),
       _template: "table",
       _replyto: val("f-email"),
-      _autoresponse: "Bedankt voor je " + (prelaunch ? "voorbestelling" : "bestelling") + " van Beter navigeren zonder strakker te sturen (" + n + "x, totaal " + euro(c.total) + "). Je ontvangt binnenkort een betaalverzoek op je mobiele nummer en een factuur per e-mail." + (prelaunch ? " Het boek verschijnt op 10 februari 2027." + (ev.checked ? " In januari laten we je weten of er een plek voor je is bij de boekpresentatie in Rotterdam." : "") : "") + " Vragen? Mail naar info@leadingit.nl. Met vriendelijke groet, Raymond Koppe",
+      _autoresponse: "Bedankt voor je " + (prelaunch ? "voorbestelling" : "bestelling") + " van Beter navigeren zonder strakker te sturen (" + n + "x, totaal " + euro(c.total) + "). Je ontvangt binnenkort een betaalverzoek op je mobiele nummer en een factuur per e-mail." + (prelaunch ? " Het boek verschijnt op 10 februari 2027." + (ev.checked ? " In januari laten we je weten of er een plek voor je is bij de boekpresentatie in de regio Rotterdam." : "") : "") + " Vragen? Mail naar info@leadingit.nl. Met vriendelijke groet, Raymond Koppe",
       boek: "Beter navigeren zonder strakker te sturen (luxe hardcover, ISBN 9789083392240)",
       soort: prelaunch ? "Voorbestelling" : "Bestelling",
       aantal: n, prijs_per_stuk: euro(PRICE) + (promo ? " (introductieprijs)" : ""), subtotaal: euro(c.books),
